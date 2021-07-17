@@ -1,0 +1,20 @@
+---
+- hosts: all
+  name: Various extras to configure the environment for operators
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Install extra software used by operators
+      ansible.builtin.package:
+        name:
+          - bluefish
+          - dnsutils
+          - firefox-esr
+    # Add VNC user to docker group so that operators can
+    # successfully execute docker-compose commands.
+    - name: Add VNC user to docker group
+      ansible.builtin.user:
+        append: yes
+        groups:
+          - docker
+        name: "{{ lookup('aws_ssm', '/vnc/username') }}"
