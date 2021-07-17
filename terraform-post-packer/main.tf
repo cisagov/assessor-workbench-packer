@@ -25,11 +25,11 @@ locals {
 }
 
 # The most-recent AMI created by cisagov/assessor-portal-packer
-data "aws_ami" "example" {
+data "aws_ami" "assessor_portal" {
   filter {
     name = "name"
     values = [
-      "example-hvm-*-x86_64-ebs",
+      "assessor-portal-hvm-*-x86_64-ebs",
     ]
   }
 
@@ -57,5 +57,5 @@ module "ami_launch_permission" {
   }
 
   account_name_regex = local.account_name_regex
-  ami_id             = data.aws_ami.example.id
+  ami_id             = data.aws_ami.assessor_portal.id
 }
