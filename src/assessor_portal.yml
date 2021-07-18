@@ -4,7 +4,9 @@
   become: yes
   become_method: sudo
   roles:
-    - assessor_portal
+    - role: assessor_portal
+      vars:
+        bucket_name: "{{ build_bucket }}"
   tasks:
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
