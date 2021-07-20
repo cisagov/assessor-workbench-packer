@@ -9,9 +9,15 @@
         bucket_name: "{{ build_bucket }}"
   tasks:
     - name: Pull in all Docker images needed for Assessor Portal
-      ansible.builtin.command:
-        chdir: "{{ assessor_portal_dir }}"
-        cmd: "{{ assessor_portal_dir }}/run.py pull"
+      block:
+        - name: Pull images with Assessor Portal run.py
+          ansible.builtin.command:
+            chdir: "{{ assessor_portal_dir }}"
+            cmd: "{{ assessor_portal_dir }}/run.py pull"
+        - name: Pull images from Assessor Portal docker-compose.yml
+          community.docker.docker_compose:
+            project_src: "{{ assessor_portal_dir }}"
+            pull: yes
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
     # cause problems if the Docker service were to start before cloud-init
