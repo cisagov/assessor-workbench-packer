@@ -10,6 +10,8 @@
   tasks:
     - name: Pull in all Docker images needed for Assessor Portal
       block:
+        # Both steps in this block are needed in order to pull in all of the
+        # images used by Assessor Portal
         - name: Pull images with Assessor Portal run.py
           ansible.builtin.command:
             chdir: "{{ assessor_portal_dir }}"
