@@ -42,7 +42,7 @@
         - name: Create Assessor Portal desktop shortcut for VNC user
           ansible.builtin.copy:
             src: assessor-portal-shortcut.desktop
-            dest: >
+            dest: >-
               /home/{{ vnc_username }}/Desktop/assessor-portal-shortcut.desktop
             mode: 0755
             owner: "{{ vnc_username }}"
