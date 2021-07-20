@@ -8,6 +8,10 @@
       vars:
         bucket_name: "{{ build_bucket }}"
   tasks:
+    - name: Pull in all Docker images needed for Assessor Portal
+      ansible.builtin.command:
+        chdir: "{{ assessor_portal_dir }}"
+        cmd: "{{ assessor_portal_dir }}/run.py pull"
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
     # cause problems if the Docker service were to start before cloud-init
@@ -44,4 +48,5 @@
             owner: "{{ vnc_username }}"
             group: "{{ vnc_username }}"
   vars:
+    assessor_portal_dir: /opt/assessor-portal
     vnc_username: "{{ lookup('aws_ssm', '/vnc/username') }}"
