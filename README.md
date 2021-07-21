@@ -1,14 +1,9 @@
-# assessor-portal-packer 💀📦 #
+# assessor-portal-packer 🕳📦 #
 
 [![GitHub Build Status](https://github.com/cisagov/assessor-portal-packer/workflows/build/badge.svg)](https://github.com/cisagov/assessor-portal-packer/actions)
 
-This is a generic skeleton project that can be used to quickly get a
-new [cisagov](https://github.com/cisagov) GitHub
-[Packer](https://packer.io) project started. This skeleton project
-contains [licensing information](LICENSE), as well as
-[pre-commit hooks](https://pre-commit.com) and
-[GitHub Actions](https://github.com/features/actions) configurations
-appropriate for the major languages that we use.
+This repository is used to create images containing the Assessor Portal
+software.
 
 ## Pre-requisites ##
 
@@ -104,8 +99,10 @@ source_profile = build-assessor-portal-packer
 role_session_name = example
 ```
 
-The [Packer template](src/packer.json) requires two environment variables to be defined:
+The [Packer template](src/packer.json) requires three environment variables
+to be defined:
 
+* `BUILD_BUCKET`: The S3 bucket containing the Assessor Portal code archive.
 * `BUILD_REGION`: The region in which to build the image.
 * `BUILD_REGION_KMS`: The KMS key alias to use to encrypt the image.
 
@@ -161,13 +158,6 @@ terraform workspace select ENVIRONMENT_TYPE
 terraform init --upgrade=true
 terraform apply
 ```
-
-## New Repositories from a Skeleton ##
-
-Please see our [Project Setup guide](https://github.com/cisagov/development-guide/tree/develop/project_setup)
-for step-by-step instructions on how to start a new repository from
-a skeleton. This will save you time and effort when configuring a
-new repository!
 
 ## Contributing ##
 

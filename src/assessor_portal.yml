@@ -1,0 +1,60 @@
+---
+- hosts: all
+  name: Install and configure Assessor Portal Docker composition
+  become: yes
+  become_method: sudo
+  roles:
+    - role: assessor_portal
+      vars:
+        bucket_name: "{{ build_bucket }}"
+  tasks:
+    - name: Pull in all Docker images needed for Assessor Portal
+      block:
+        # Both steps in this block are needed in order to pull in all of the
+        # images used by Assessor Portal
+        - name: Pull images with Assessor Portal run.py
+          ansible.builtin.command:
+            chdir: "{{ assessor_portal_dir }}"
+            cmd: "{{ assessor_portal_dir }}/run.py pull"
+        - name: Pull images from Assessor Portal docker-compose.yml
+          community.docker.docker_compose:
+            project_src: "{{ assessor_portal_dir }}"
+            pull: yes
+    # We use cloud-init scripts in cisagov/cool-assessment-terraform to
+    # set Docker's backing file system to a persistent volume.  It would
+    # cause problems if the Docker service were to start before cloud-init
+    # finished, so we modify the Docker unit file to wait until cloud-final
+    # has completed.  We include multi-user.service in here also to avoid
+    # a systemd dependency cycle.
+    - name: Ensure Docker starts after multi-user and cloud-final complete
+      ansible.builtin.lineinfile:
+        path: /lib/systemd/system/docker.service
+        backrefs: yes
+        # The exclamation mark forces us to quote the string because
+        # it is a special character in YAML.
+        #
+        # The (?!...) jazz is a negative look-ahead assertion.  See
+        # here, for example:
+        # https://docs.python.org/3/library/re.html
+        regexp: '^After=(.*)(?! multi\-user\.target cloud\-final\.service)$'
+        line: After=\1 multi-user.target cloud-final.service
+    - name: Create Assessor Portal desktop shortcut for VNC user
+      block:
+        - name: Create VNC user Desktop directory
+          ansible.builtin.file:
+            path: /home/{{ vnc_username }}/Desktop
+            state: directory
+            mode: 0755
+            owner: "{{ vnc_username }}"
+            group: "{{ vnc_username }}"
+        - name: Create Assessor Portal desktop shortcut for VNC user
+          ansible.builtin.copy:
+            src: assessor-portal-shortcut.desktop
+            dest: >-
+              /home/{{ vnc_username }}/Desktop/assessor-portal-shortcut.desktop
+            mode: 0755
+            owner: "{{ vnc_username }}"
+            group: "{{ vnc_username }}"
+  vars:
+    assessor_portal_dir: /opt/assessor-portal
+    vnc_username: "{{ lookup('aws_ssm', '/vnc/username') }}"
