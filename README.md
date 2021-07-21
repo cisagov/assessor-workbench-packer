@@ -99,8 +99,10 @@ source_profile = build-assessor-portal-packer
 role_session_name = example
 ```
 
-The [Packer template](src/packer.json) requires two environment variables to be defined:
+The [Packer template](src/packer.json) requires three environment variables
+to be defined:
 
+* `BUILD_BUCKET`: The S3 bucket containing the Assessor Portal code archive.
 * `BUILD_REGION`: The region in which to build the image.
 * `BUILD_REGION_KMS`: The KMS key alias to use to encrypt the image.
 
