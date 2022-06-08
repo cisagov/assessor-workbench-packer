@@ -16,6 +16,10 @@
           ansible.builtin.command:
             chdir: "{{ assessor_portal_dir }}"
             cmd: "{{ assessor_portal_dir }}/run.py pull"
+        # The community.docker.docker_compose module exists, but it
+        # only supports docker-compose and not the Docker compose
+        # plugin (i.e., docker compose).  Ansible may offer more
+        # up-to-date support for Docker compositions in the future.
         - name: Pull images from Assessor Portal docker-compose.yml
           ansible.builtin.command:
             chdir: "{{ assessor_portal_dir }}"
