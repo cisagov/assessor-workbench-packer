@@ -11,7 +11,7 @@
           - dnsutils
           - firefox-esr
     # Add VNC user to docker group so that operators can
-    # successfully execute docker-compose commands.
+    # successfully execute docker compose commands.
     - name: Add VNC user to docker group
       ansible.builtin.user:
         append: yes

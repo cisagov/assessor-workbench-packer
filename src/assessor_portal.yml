@@ -16,10 +16,14 @@
           ansible.builtin.command:
             chdir: "{{ assessor_portal_dir }}"
             cmd: "{{ assessor_portal_dir }}/run.py pull"
+        # The community.docker.docker_compose module exists, but it
+        # only supports docker-compose and not the Docker Compose
+        # plugin (i.e., docker compose).  Ansible may offer more
+        # up-to-date support for Docker compositions in the future.
         - name: Pull images from Assessor Portal docker-compose.yml
-          community.docker.docker_compose:
-            project_src: "{{ assessor_portal_dir }}"
-            pull: yes
+          ansible.builtin.command:
+            chdir: "{{ assessor_portal_dir }}"
+            cmd: docker compose pull
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
     # cause problems if the Docker service were to start before cloud-init
@@ -56,7 +60,7 @@
             owner: "{{ vnc_username }}"
             group: "{{ vnc_username }}"
     # Add VNC user to docker group so that operators can successfully
-    # execute docker-compose commands.
+    # execute docker compose commands.
     - name: Add VNC user to docker group
       ansible.builtin.user:
         append: yes
