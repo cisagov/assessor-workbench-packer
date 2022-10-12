@@ -1,4 +1,4 @@
-# assessor-workbench-packer 🕳📦 #
+# assessor-workbench-packer #
 
 [![GitHub Build Status](https://github.com/cisagov/assessor-workbench-packer/workflows/build/badge.svg)](https://github.com/cisagov/assessor-workbench-packer/actions)
 
