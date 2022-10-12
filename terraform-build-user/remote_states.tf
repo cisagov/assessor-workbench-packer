@@ -4,7 +4,7 @@
 # for this configuration.
 # ------------------------------------------------------------------------------
 
-data "terraform_remote_state" "ansible_role_assessor_portal" {
+data "terraform_remote_state" "ansible_role_assessor_workbench" {
   backend = "s3"
 
   config = {
@@ -13,7 +13,7 @@ data "terraform_remote_state" "ansible_role_assessor_portal" {
     dynamodb_table = "terraform-state-lock"
     profile        = "cool-terraform-backend"
     region         = "us-east-1"
-    key            = "ansible-role-assessor-portal/terraform.tfstate"
+    key            = "ansible-role-assessor-workbench/terraform.tfstate"
   }
 }
 

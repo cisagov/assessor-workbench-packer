@@ -24,12 +24,12 @@ locals {
   account_name_regex  = format("^env[[:digit:]]+ \\(%s\\)$", local.images_account_type)
 }
 
-# The IDs of all cisagov/assessor-portal-packer AMIs
+# The IDs of all cisagov/assessor-workbench-packer AMIs
 data "aws_ami_ids" "historical_amis" {
   filter {
     name = "name"
     values = [
-      "assessor-portal-hvm-*-x86_64-ebs",
+      "assessor-workbench-hvm-*-x86_64-ebs",
     ]
   }
 

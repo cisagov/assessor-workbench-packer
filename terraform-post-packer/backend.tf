@@ -5,6 +5,6 @@ terraform {
     dynamodb_table = "terraform-state-lock"
     profile        = "cool-terraform-backend"
     region         = "us-east-1"
-    key            = "assessor-portal-packer/terraform-post-packer.tfstate"
+    key            = "assessor-workbench-packer/terraform-post-packer.tfstate"
   }
 }

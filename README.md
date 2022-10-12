@@ -1,8 +1,8 @@
-# assessor-portal-packer 🕳📦 #
+# assessor-workbench-packer 🕳📦 #
 
-[![GitHub Build Status](https://github.com/cisagov/assessor-portal-packer/workflows/build/badge.svg)](https://github.com/cisagov/assessor-portal-packer/actions)
+[![GitHub Build Status](https://github.com/cisagov/assessor-workbench-packer/workflows/build/badge.svg)](https://github.com/cisagov/assessor-workbench-packer/actions)
 
-This repository is used to create images containing the Assessor Portal
+This repository is used to create images containing the Assessor Workbench
 software.
 
 ## Pre-requisites ##
@@ -44,7 +44,7 @@ of the Project Setup README.
 
 If you have appropriate permissions for the repository you can view existing
 secrets on the
-[appropriate page](https://github.com/cisagov/assessor-portal-packer/settings/secrets)
+[appropriate page](https://github.com/cisagov/assessor-workbench-packer/settings/secrets)
 in the repository's settings.
 
 IMPORTANT: The account where your images will be built must have a VPC and
@@ -89,13 +89,13 @@ Add the following blocks to your AWS credentials file (be sure to replace the
 dummy account ID in the `role_arn` with your own):
 
 ```console
-[build-assessor-portal-packer]
+[build-assessor-workbench-packer]
 aws_access_key_id = AKIAXXXXXXXXXXXXXXXX
 aws_secret_access_key = XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-[cool-images-ec2amicreate-assessor-portal-packer]
-role_arn = arn:aws:iam::111111111111:role/EC2AMICreate-build-assessor-portal-packer
-source_profile = build-assessor-portal-packer
+[cool-images-ec2amicreate-assessor-workbench-packer]
+role_arn = arn:aws:iam::111111111111:role/EC2AMICreate-build-assessor-workbench-packer
+source_profile = build-assessor-workbench-packer
 role_session_name = example
 ```
 
@@ -104,7 +104,7 @@ The [Packer template](src/packer.pkr.hcl) defines a number of variables:
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | ami\_regions | The list of AWS regions to copy the AMI to once it has been created. Example: ["us-east-1"] | `list(string)` | `[]` | no |
-| build\_bucket | The S3 bucket containing the Assessor Portal code archive. | `string` | `""` | no |
+| build\_bucket | The S3 bucket containing the Assessor Workbench code archive. | `string` | `""` | no |
 | build\_region | The region in which to retrieve the base AMI from and build the new AMI. | `string` | `"us-east-1"` | no |
 | build\_region\_kms | The ID or ARN of the KMS key to use for AMI encryption. | `string` | `"alias/cool-amis"` | no |
 | is\_prerelease | The pre-release status to use for the tags applied to the created AMI. | `bool` | `false` | no |
@@ -127,7 +127,7 @@ Here is an example of how to kick off a pre-release build:
 ```console
 pip install --requirement requirements-dev.txt
 ansible-galaxy install --force --force-with-deps --role-file src/requirements.yml
-AWS_PROFILE=cool-images-ec2amicreate-assessor-portal-packer packer build --timestamp-ui -var release_tag=$(./bump_version.sh show) -var build_bucket=installers-bucket -var is_prerelease=true src/packer.pkr.hcl
+AWS_PROFILE=cool-images-ec2amicreate-assessor-workbench-packer packer build --timestamp-ui -var release_tag=$(./bump_version.sh show) -var build_bucket=installers-bucket -var is_prerelease=true src/packer.pkr.hcl
 ```
 
 If you are satisfied with your pre-release image, you can easily create a release
@@ -145,7 +145,7 @@ region_kms_keys = {
 ```
 
 ```console
-AWS_PROFILE=cool-images-ec2amicreate-assessor-portal-packer packer build --timestamp-ui -var-file release.pkrvars.hcl src/packer.pkr.hcl
+AWS_PROFILE=cool-images-ec2amicreate-assessor-workbench-packer packer build --timestamp-ui -var-file release.pkrvars.hcl src/packer.pkr.hcl
 ```
 
 ### Giving Other AWS Accounts Permission to Launch the Image ###
