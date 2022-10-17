@@ -1,28 +1,28 @@
 ---
 - hosts: all
-  name: Install and configure Assessor Portal Docker composition
+  name: Install and configure Assessor Workbench Docker composition
   become: yes
   become_method: sudo
   roles:
-    - role: assessor_portal
+    - role: assessor_workbench
       vars:
         bucket_name: "{{ build_bucket }}"
   tasks:
-    - name: Pull in all Docker images needed for Assessor Portal
+    - name: Pull in all Docker images needed for Assessor Workbench
       block:
         # Both steps in this block are needed in order to pull in all of the
-        # images used by Assessor Portal
-        - name: Pull images with Assessor Portal run.py
+        # images used by Assessor Workbench
+        - name: Pull images with Assessor Workbench run.py
           ansible.builtin.command:
-            chdir: "{{ assessor_portal_dir }}"
-            cmd: "{{ assessor_portal_dir }}/run.py pull"
+            chdir: "{{ assessor_workbench_dir }}"
+            cmd: "{{ assessor_workbench_dir }}/run.py pull"
         # The community.docker.docker_compose module exists, but it
         # only supports docker-compose and not the Docker Compose
         # plugin (i.e., docker compose).  Ansible may offer more
         # up-to-date support for Docker compositions in the future.
-        - name: Pull images from Assessor Portal docker-compose.yml
+        - name: Pull images from Assessor Workbench docker-compose.yml
           ansible.builtin.command:
-            chdir: "{{ assessor_portal_dir }}"
+            chdir: "{{ assessor_workbench_dir }}"
             cmd: docker compose pull
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
@@ -42,7 +42,7 @@
         # https://docs.python.org/3/library/re.html
         regexp: '^After=(.*)(?! multi\-user\.target cloud\-final\.service)$'
         line: After=\1 multi-user.target cloud-final.service
-    - name: Create Assessor Portal desktop shortcut for VNC user
+    - name: Create Assessor Workbench desktop shortcut for VNC user
       block:
         - name: Create VNC user Desktop directory
           ansible.builtin.file:
@@ -51,11 +51,11 @@
             mode: 0755
             owner: "{{ vnc_username }}"
             group: "{{ vnc_username }}"
-        - name: Create Assessor Portal desktop shortcut for VNC user
+        - name: Create Assessor Workbench desktop shortcut for VNC user
           ansible.builtin.copy:
-            src: assessor-portal-shortcut.desktop
+            src: assessor-workbench-shortcut.desktop
             dest: >-
-              /home/{{ vnc_username }}/Desktop/assessor-portal-shortcut.desktop
+              /home/{{ vnc_username }}/Desktop/assessor-workbench-shortcut.desktop
             mode: 0755
             owner: "{{ vnc_username }}"
             group: "{{ vnc_username }}"
@@ -68,5 +68,5 @@
           - docker
         name: "{{ vnc_username }}"
   vars:
-    assessor_portal_dir: /opt/assessor-portal
+    assessor_workbench_dir: /opt/assessor-workbench
     vnc_username: "{{ lookup('aws_ssm', '/vnc/username') }}"

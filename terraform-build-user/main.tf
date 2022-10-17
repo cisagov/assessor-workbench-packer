@@ -17,24 +17,24 @@ module "iam_user" {
     "/vnc/ssh/rsa_public_key",
     "/vnc/username",
   ]
-  user_name = "build-assessor-portal-packer"
+  user_name = "build-assessor-workbench-packer"
 }
 
 # Attach 3rd party S3 bucket read-only policy from
-# cisagov/ansible-role-assessor-portal to the production EC2AMICreate
+# cisagov/ansible-role-assessor-workbench to the production EC2AMICreate
 # role
-resource "aws_iam_role_policy_attachment" "thirdpartybucketread_assessorportal_production" {
+resource "aws_iam_role_policy_attachment" "thirdpartybucketread_assessorworkbench_production" {
   provider = aws.images-production-ami
 
-  policy_arn = data.terraform_remote_state.ansible_role_assessor_portal.outputs.production_policy.arn
+  policy_arn = data.terraform_remote_state.ansible_role_assessor_workbench.outputs.production_policy.arn
   role       = module.iam_user.ec2amicreate_role_production.name
 }
 
 # Attach 3rd party S3 bucket read-only policy from
-# cisagov/ansible-role-assessor-portal to the staging EC2AMICreate role
-resource "aws_iam_role_policy_attachment" "thirdpartybucketread_assessorportal_staging" {
+# cisagov/ansible-role-assessor-workbench to the staging EC2AMICreate role
+resource "aws_iam_role_policy_attachment" "thirdpartybucketread_assessorworkbench_staging" {
   provider = aws.images-staging-ami
 
-  policy_arn = data.terraform_remote_state.ansible_role_assessor_portal.outputs.staging_policy.arn
+  policy_arn = data.terraform_remote_state.ansible_role_assessor_workbench.outputs.staging_policy.arn
   role       = module.iam_user.ec2amicreate_role_staging.name
 }

@@ -10,7 +10,7 @@ variable "ami_regions" {
 # that effort.
 variable "build_bucket" {
   default     = ""
-  description = "The S3 bucket containing the Assessor Portal code archive."
+  description = "The S3 bucket containing the Assessor Workbench code archive."
   type        = string
 }
 
@@ -69,7 +69,7 @@ data "amazon-ami" "debian_bullseye" {
 
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 
-source "amazon-ebs" "assessor_portal" {
+source "amazon-ebs" "assessor_workbench" {
   ami_block_device_mappings {
     delete_on_termination = true
     device_name           = "/dev/xvda"
@@ -77,7 +77,7 @@ source "amazon-ebs" "assessor_portal" {
     volume_size           = 16
     volume_type           = "gp3"
   }
-  ami_name                    = "assessor-portal-hvm-${local.timestamp}-x86_64-ebs"
+  ami_name                    = "assessor-workbench-hvm-${local.timestamp}-x86_64-ebs"
   ami_regions                 = var.ami_regions
   associate_public_ip_address = true
   encrypt_boot                = true
@@ -101,7 +101,7 @@ source "amazon-ebs" "assessor_portal" {
     }
   }
   tags = {
-    Application        = "Assessor Portal"
+    Application        = "Assessor Workbench"
     Base_AMI_Name      = data.amazon-ami.debian_bullseye.name
     GitHub_Release_URL = var.release_url
     OS_Version         = "Debian Bullseye"
@@ -120,7 +120,7 @@ source "amazon-ebs" "assessor_portal" {
 }
 
 build {
-  sources = ["source.amazon-ebs.assessor_portal"]
+  sources = ["source.amazon-ebs.assessor_workbench"]
 
   provisioner "ansible" {
     playbook_file = "src/upgrade.yml"
