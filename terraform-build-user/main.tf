@@ -11,8 +11,8 @@ module "iam_user" {
 
   ssm_parameters = [
     "/vnc/password",
-    "/vnc/ssh/rsa_private_key",
-    "/vnc/ssh/rsa_public_key",
+    "/vnc/ssh/ed25519_private_key",
+    "/vnc/ssh/ed25519_public_key",
     "/vnc/username",
   ]
   user_name = "build-assessor-workbench-packer"
