@@ -3,11 +3,12 @@
   name: Install and configure Assessor Workbench Docker composition
   become: yes
   become_method: sudo
-  roles:
-    - role: assessor_workbench
+  tasks:
+    - name: Install Assessor Workbench
+      ansible.builtin.include_role:
+        name: assessor_workbench
       vars:
         bucket_name: "{{ build_bucket }}"
-  tasks:
     - name: Pull in all Docker images needed for Assessor Workbench
       block:
         # Both steps in this block are needed in order to pull in all of the
