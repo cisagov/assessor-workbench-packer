@@ -18,7 +18,6 @@
             chdir: "{{ assessor_workbench_dir }}"
             cmd: "{{ assessor_workbench_dir }}/run.py pull"
           changed_when: run_py_pull == 0
-          failed_when: run_py_pull != 0
           register: run_py_pull
         # The community.docker.docker_compose module exists, but it
         # only supports docker-compose and not the Docker Compose
