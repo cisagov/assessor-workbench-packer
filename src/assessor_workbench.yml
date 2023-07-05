@@ -17,6 +17,9 @@
           ansible.builtin.command:
             chdir: "{{ assessor_workbench_dir }}"
             cmd: "{{ assessor_workbench_dir }}/run.py pull"
+          changed_when: run_py_pull == 0
+          failed_when: run_py_pull != 0
+          register: run_py_pull
         # The community.docker.docker_compose module exists, but it
         # only supports docker-compose and not the Docker Compose
         # plugin (i.e., docker compose).  Ansible may offer more
@@ -25,6 +28,9 @@
           ansible.builtin.command:
             chdir: "{{ assessor_workbench_dir }}"
             cmd: docker compose pull
+          changed_when: docker_compose_pull.rc == 0
+          failed_when: docker_compose_pull.rc != 0
+          register: docker_compose_pull
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
     # cause problems if the Docker service were to start before cloud-init
