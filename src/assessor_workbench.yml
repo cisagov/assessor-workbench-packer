@@ -2,13 +2,13 @@
 - hosts: all
   name: Install and configure Assessor Workbench Docker composition
   become: yes
-  become_method: sudo
+  become_method: ansible.builtin.sudo
   tasks:
     - name: Install Assessor Workbench
       ansible.builtin.include_role:
         name: assessor_workbench
       vars:
-        bucket_name: "{{ build_bucket }}"
+        assessor_workbench_bucket_name: "{{ build_bucket }}"
     - name: Pull in all Docker images needed for Assessor Workbench
       block:
         # Both steps in this block are needed in order to pull in all of the
@@ -17,6 +17,8 @@
           ansible.builtin.command:
             chdir: "{{ assessor_workbench_dir }}"
             cmd: "{{ assessor_workbench_dir }}/run.py pull"
+          changed_when: run_py_pull == 0
+          register: run_py_pull
         # The community.docker.docker_compose module exists, but it
         # only supports docker-compose and not the Docker Compose
         # plugin (i.e., docker compose).  Ansible may offer more
@@ -25,6 +27,9 @@
           ansible.builtin.command:
             chdir: "{{ assessor_workbench_dir }}"
             cmd: docker compose pull
+          changed_when: docker_compose_pull.rc == 0
+          failed_when: docker_compose_pull.rc != 0
+          register: docker_compose_pull
     # We use cloud-init scripts in cisagov/cool-assessment-terraform to
     # set Docker's backing file system to a persistent volume.  It would
     # cause problems if the Docker service were to start before cloud-init
