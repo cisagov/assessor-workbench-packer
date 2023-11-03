@@ -1,7 +1,7 @@
 ---
 - hosts: all
   name: Various extras to configure the environment for operators
-  become: yes
+  become: true
   become_method: ansible.builtin.sudo
   tasks:
     - name: Install extra software used by operators
@@ -14,7 +14,7 @@
     # successfully execute docker compose commands.
     - name: Add VNC user to docker group
       ansible.builtin.user:
-        append: yes
+        append: true
         groups:
           - docker
         name: "{{ lookup('aws_ssm', '/vnc/username') }}"

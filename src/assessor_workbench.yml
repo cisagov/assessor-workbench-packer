@@ -1,7 +1,7 @@
 ---
 - hosts: all
   name: Install and configure Assessor Workbench Docker composition
-  become: yes
+  become: true
   become_method: ansible.builtin.sudo
   tasks:
     - name: Install Assessor Workbench
@@ -39,7 +39,7 @@
     - name: Ensure Docker starts after multi-user and cloud-final complete
       ansible.builtin.lineinfile:
         path: /lib/systemd/system/docker.service
-        backrefs: yes
+        backrefs: true
         # The exclamation mark forces us to quote the string because
         # it is a special character in YAML.
         #
@@ -69,7 +69,7 @@
     # execute docker compose commands.
     - name: Add VNC user to docker group
       ansible.builtin.user:
-        append: yes
+        append: true
         groups:
           - docker
         name: "{{ vnc_username }}"
