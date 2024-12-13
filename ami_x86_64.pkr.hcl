@@ -9,7 +9,7 @@ source "amazon-ebs" "x86_64" {
     delete_on_termination = true
     device_name           = "/dev/xvda"
     encrypted             = true
-    volume_size           = 8
+    volume_size           = 16
     volume_type           = "gp3"
   }
   region             = var.build_region
